@@ -1,0 +1,512 @@
+{
+  "Albania": {
+    "avg_pesticides": 565.82,
+    "avg_rainfall": 1485.0,
+    "avg_temperature": 16.37
+  },
+  "Algeria": {
+    "avg_pesticides": 1828.92,
+    "avg_rainfall": 89.0,
+    "avg_temperature": 17.59
+  },
+  "Angola": {
+    "avg_pesticides": 40.0,
+    "avg_rainfall": 1010.0,
+    "avg_temperature": 24.26
+  },
+  "Argentina": {
+    "avg_pesticides": 63700.17,
+    "avg_rainfall": 591.0,
+    "avg_temperature": 17.69
+  },
+  "Armenia": {
+    "avg_pesticides": 88.77,
+    "avg_rainfall": 562.0,
+    "avg_temperature": 9.58
+  },
+  "Australia": {
+    "avg_pesticides": 34091.0,
+    "avg_rainfall": 534.0,
+    "avg_temperature": 17.2
+  },
+  "Austria": {
+    "avg_pesticides": 3531.8,
+    "avg_rainfall": 1110.0,
+    "avg_temperature": 9.17
+  },
+  "Azerbaijan": {
+    "avg_pesticides": 148.68,
+    "avg_rainfall": 447.0,
+    "avg_temperature": 12.66
+  },
+  "Bahamas": {
+    "avg_pesticides": 315.74,
+    "avg_rainfall": 1292.0,
+    "avg_temperature": 25.46
+  },
+  "Bahrain": {
+    "avg_pesticides": 12.46,
+    "avg_rainfall": 83.0,
+    "avg_temperature": 26.89
+  },
+  "Bangladesh": {
+    "avg_pesticides": 3295.78,
+    "avg_rainfall": 2666.0,
+    "avg_temperature": 26.09
+  },
+  "Belarus": {
+    "avg_pesticides": 8306.31,
+    "avg_rainfall": 618.0,
+    "avg_temperature": 6.71
+  },
+  "Belgium": {
+    "avg_pesticides": 6712.05,
+    "avg_rainfall": 847.0,
+    "avg_temperature": 11.0
+  },
+  "Botswana": {
+    "avg_pesticides": 17.0,
+    "avg_rainfall": 416.0,
+    "avg_temperature": 19.54
+  },
+  "Brazil": {
+    "avg_pesticides": 145552.0,
+    "avg_rainfall": 1761.0,
+    "avg_temperature": 21.91
+  },
+  "Bulgaria": {
+    "avg_pesticides": 2747.25,
+    "avg_rainfall": 608.0,
+    "avg_temperature": 9.51
+  },
+  "Burkina Faso": {
+    "avg_pesticides": 75.44,
+    "avg_rainfall": 748.0,
+    "avg_temperature": 28.77
+  },
+  "Burundi": {
+    "avg_pesticides": 117.56,
+    "avg_rainfall": 1274.0,
+    "avg_temperature": 21.32
+  },
+  "Cameroon": {
+    "avg_pesticides": 813.77,
+    "avg_rainfall": 1604.0,
+    "avg_temperature": 25.21
+  },
+  "Canada": {
+    "avg_pesticides": 38258.2,
+    "avg_rainfall": 537.0,
+    "avg_temperature": 7.3
+  },
+  "Central African Republic": {
+    "avg_pesticides": 22.87,
+    "avg_rainfall": 1342.0,
+    "avg_temperature": 25.45
+  },
+  "Chile": {
+    "avg_pesticides": 13156.09,
+    "avg_rainfall": 1522.0,
+    "avg_temperature": 9.57
+  },
+  "Colombia": {
+    "avg_pesticides": 51435.13,
+    "avg_rainfall": 3240.0,
+    "avg_temperature": 24.92
+  },
+  "Croatia": {
+    "avg_pesticides": 2388.0,
+    "avg_rainfall": 1113.0,
+    "avg_temperature": 10.74
+  },
+  "Denmark": {
+    "avg_pesticides": 3894.0,
+    "avg_rainfall": 703.0,
+    "avg_temperature": 9.06
+  },
+  "Dominican Republic": {
+    "avg_pesticides": 4971.0,
+    "avg_rainfall": 1410.0,
+    "avg_temperature": 26.78
+  },
+  "Ecuador": {
+    "avg_pesticides": 7953.42,
+    "avg_rainfall": 2274.0,
+    "avg_temperature": 21.78
+  },
+  "Egypt": {
+    "avg_pesticides": 5471.0,
+    "avg_rainfall": 51.0,
+    "avg_temperature": 21.56
+  },
+  "El Salvador": {
+    "avg_pesticides": 3164.62,
+    "avg_rainfall": 1784.0,
+    "avg_temperature": 26.07
+  },
+  "Eritrea": {
+    "avg_pesticides": 27.63,
+    "avg_rainfall": 383.0,
+    "avg_temperature": 24.77
+  },
+  "Estonia": {
+    "avg_pesticides": 351.0,
+    "avg_rainfall": 626.0,
+    "avg_temperature": 6.14
+  },
+  "Finland": {
+    "avg_pesticides": 1475.39,
+    "avg_rainfall": 536.0,
+    "avg_temperature": 5.62
+  },
+  "France": {
+    "avg_pesticides": 84011.0,
+    "avg_rainfall": 867.0,
+    "avg_temperature": 11.46
+  },
+  "Germany": {
+    "avg_pesticides": 34431.72,
+    "avg_rainfall": 700.0,
+    "avg_temperature": 9.31
+  },
+  "Ghana": {
+    "avg_pesticides": 134.25,
+    "avg_rainfall": 1187.0,
+    "avg_temperature": 26.87
+  },
+  "Greece": {
+    "avg_pesticides": 8002.2,
+    "avg_rainfall": 652.0,
+    "avg_temperature": 18.15
+  },
+  "Guatemala": {
+    "avg_pesticides": 12004.33,
+    "avg_rainfall": 1996.0,
+    "avg_temperature": 19.88
+  },
+  "Guinea": {
+    "avg_pesticides": 278.77,
+    "avg_rainfall": 1651.0,
+    "avg_temperature": 27.29
+  },
+  "Guyana": {
+    "avg_pesticides": 289.9,
+    "avg_rainfall": 2387.0,
+    "avg_temperature": 27.3
+  },
+  "Haiti": {
+    "avg_pesticides": 27.85,
+    "avg_rainfall": 1440.0,
+    "avg_temperature": 27.2
+  },
+  "Honduras": {
+    "avg_pesticides": 5283.93,
+    "avg_rainfall": 1976.0,
+    "avg_temperature": 24.61
+  },
+  "Hungary": {
+    "avg_pesticides": 8231.5,
+    "avg_rainfall": 589.0,
+    "avg_temperature": 10.67
+  },
+  "India": {
+    "avg_pesticides": 46195.0,
+    "avg_rainfall": 1083.0,
+    "avg_temperature": 25.98
+  },
+  "Indonesia": {
+    "avg_pesticides": 1597.0,
+    "avg_rainfall": 2702.0,
+    "avg_temperature": 27.18
+  },
+  "Iraq": {
+    "avg_pesticides": 828.62,
+    "avg_rainfall": 216.0,
+    "avg_temperature": 21.87
+  },
+  "Ireland": {
+    "avg_pesticides": 2268.1,
+    "avg_rainfall": 1118.0,
+    "avg_temperature": 9.47
+  },
+  "Italy": {
+    "avg_pesticides": 81217.6,
+    "avg_rainfall": 832.0,
+    "avg_temperature": 10.36
+  },
+  "Jamaica": {
+    "avg_pesticides": 909.71,
+    "avg_rainfall": 2051.0,
+    "avg_temperature": 27.34
+  },
+  "Japan": {
+    "avg_pesticides": 78735.45,
+    "avg_rainfall": 1668.0,
+    "avg_temperature": 15.42
+  },
+  "Kazakhstan": {
+    "avg_pesticides": 7044.9,
+    "avg_rainfall": 250.0,
+    "avg_temperature": 5.5
+  },
+  "Kenya": {
+    "avg_pesticides": 1578.0,
+    "avg_rainfall": 630.0,
+    "avg_temperature": 16.66
+  },
+  "Latvia": {
+    "avg_pesticides": 594.46,
+    "avg_rainfall": 641.0,
+    "avg_temperature": 6.51
+  },
+  "Lebanon": {
+    "avg_pesticides": 1816.0,
+    "avg_rainfall": 661.0,
+    "avg_temperature": 19.72
+  },
+  "Lesotho": {
+    "avg_pesticides": 0.3,
+    "avg_rainfall": 788.0,
+    "avg_temperature": 14.62
+  },
+  "Libya": {
+    "avg_pesticides": 3277.13,
+    "avg_rainfall": 56.0,
+    "avg_temperature": 20.1
+  },
+  "Lithuania": {
+    "avg_pesticides": 1023.6,
+    "avg_rainfall": 656.0,
+    "avg_temperature": 6.7
+  },
+  "Madagascar": {
+    "avg_pesticides": 114.51,
+    "avg_rainfall": 1513.0,
+    "avg_temperature": 19.96
+  },
+  "Malawi": {
+    "avg_pesticides": 177.24,
+    "avg_rainfall": 1181.0,
+    "avg_temperature": 20.62
+  },
+  "Malaysia": {
+    "avg_pesticides": 39406.48,
+    "avg_rainfall": 2875.0,
+    "avg_temperature": 27.24
+  },
+  "Mali": {
+    "avg_pesticides": 15.36,
+    "avg_rainfall": 282.0,
+    "avg_temperature": 27.62
+  },
+  "Mauritania": {
+    "avg_pesticides": 39.09,
+    "avg_rainfall": 92.0,
+    "avg_temperature": 27.82
+  },
+  "Mauritius": {
+    "avg_pesticides": 644.12,
+    "avg_rainfall": 2041.0,
+    "avg_temperature": 24.19
+  },
+  "Mexico": {
+    "avg_pesticides": 34468.93,
+    "avg_rainfall": 758.0,
+    "avg_temperature": 20.86
+  },
+  "Montenegro": {
+    "avg_pesticides": 33.28,
+    "avg_rainfall": 241.0,
+    "avg_temperature": 11.5
+  },
+  "Morocco": {
+    "avg_pesticides": 13697.0,
+    "avg_rainfall": 346.0,
+    "avg_temperature": 18.2
+  },
+  "Mozambique": {
+    "avg_pesticides": 102.26,
+    "avg_rainfall": 1032.0,
+    "avg_temperature": 21.89
+  },
+  "Namibia": {
+    "avg_pesticides": 56.0,
+    "avg_rainfall": 285.0,
+    "avg_temperature": 20.37
+  },
+  "Nepal": {
+    "avg_pesticides": 122.04,
+    "avg_rainfall": 1500.0,
+    "avg_temperature": 15.36
+  },
+  "Netherlands": {
+    "avg_pesticides": 10568.0,
+    "avg_rainfall": 778.0,
+    "avg_temperature": 10.33
+  },
+  "New Zealand": {
+    "avg_pesticides": 3904.0,
+    "avg_rainfall": 1732.0,
+    "avg_temperature": 13.28
+  },
+  "Nicaragua": {
+    "avg_pesticides": 4373.1,
+    "avg_rainfall": 2280.0,
+    "avg_temperature": 27.05
+  },
+  "Niger": {
+    "avg_pesticides": 29.44,
+    "avg_rainfall": 151.0,
+    "avg_temperature": 29.71
+  },
+  "Norway": {
+    "avg_pesticides": 761.97,
+    "avg_rainfall": 1414.0,
+    "avg_temperature": 3.57
+  },
+  "Pakistan": {
+    "avg_pesticides": 6183.0,
+    "avg_rainfall": 494.0,
+    "avg_temperature": 24.66
+  },
+  "Papua New Guinea": {
+    "avg_pesticides": 105.0,
+    "avg_rainfall": 3142.0,
+    "avg_temperature": 25.27
+  },
+  "Peru": {
+    "avg_pesticides": 8322.88,
+    "avg_rainfall": 1738.0,
+    "avg_temperature": 17.26
+  },
+  "Poland": {
+    "avg_pesticides": 9824.0,
+    "avg_rainfall": 600.0,
+    "avg_temperature": 8.5
+  },
+  "Portugal": {
+    "avg_pesticides": 13984.91,
+    "avg_rainfall": 854.0,
+    "avg_temperature": 16.24
+  },
+  "Qatar": {
+    "avg_pesticides": 68.0,
+    "avg_rainfall": 74.0,
+    "avg_temperature": 28.12
+  },
+  "Romania": {
+    "avg_pesticides": 7875.7,
+    "avg_rainfall": 637.0,
+    "avg_temperature": 11.9
+  },
+  "Rwanda": {
+    "avg_pesticides": 181.6,
+    "avg_rainfall": 1212.0,
+    "avg_temperature": 19.6
+  },
+  "Saudi Arabia": {
+    "avg_pesticides": 3194.48,
+    "avg_rainfall": 59.0,
+    "avg_temperature": 26.46
+  },
+  "Senegal": {
+    "avg_pesticides": 465.95,
+    "avg_rainfall": 686.0,
+    "avg_temperature": 25.34
+  },
+  "Slovenia": {
+    "avg_pesticides": 1155.23,
+    "avg_rainfall": 1162.0,
+    "avg_temperature": 10.74
+  },
+  "South Africa": {
+    "avg_pesticides": 26857.0,
+    "avg_rainfall": 495.0,
+    "avg_temperature": 17.24
+  },
+  "Spain": {
+    "avg_pesticides": 39043.0,
+    "avg_rainfall": 636.0,
+    "avg_temperature": 16.97
+  },
+  "Sri Lanka": {
+    "avg_pesticides": 1654.41,
+    "avg_rainfall": 1712.0,
+    "avg_temperature": 26.59
+  },
+  "Sudan": {
+    "avg_pesticides": 2469.47,
+    "avg_rainfall": 1712.0,
+    "avg_temperature": 28.4
+  },
+  "Suriname": {
+    "avg_pesticides": 537.49,
+    "avg_rainfall": 2331.0,
+    "avg_temperature": 27.19
+  },
+  "Sweden": {
+    "avg_pesticides": 1789.0,
+    "avg_rainfall": 624.0,
+    "avg_temperature": 7.54
+  },
+  "Switzerland": {
+    "avg_pesticides": 1922.5,
+    "avg_rainfall": 1537.0,
+    "avg_temperature": 7.96
+  },
+  "Tajikistan": {
+    "avg_pesticides": 264.6,
+    "avg_rainfall": 691.0,
+    "avg_temperature": 8.61
+  },
+  "Thailand": {
+    "avg_pesticides": 24062.0,
+    "avg_rainfall": 1622.0,
+    "avg_temperature": 27.8
+  },
+  "Tunisia": {
+    "avg_pesticides": 746.75,
+    "avg_rainfall": 207.0,
+    "avg_temperature": 19.64
+  },
+  "Turkey": {
+    "avg_pesticides": 33089.0,
+    "avg_rainfall": 593.0,
+    "avg_temperature": 14.29
+  },
+  "Uganda": {
+    "avg_pesticides": 88.0,
+    "avg_rainfall": 1180.0,
+    "avg_temperature": 23.75
+  },
+  "Ukraine": {
+    "avg_pesticides": 42129.32,
+    "avg_rainfall": 565.0,
+    "avg_temperature": 8.42
+  },
+  "United Kingdom": {
+    "avg_pesticides": 31077.0,
+    "avg_rainfall": 1220.0,
+    "avg_temperature": 9.69
+  },
+  "Uruguay": {
+    "avg_pesticides": 4433.04,
+    "avg_rainfall": 1300.0,
+    "avg_temperature": 16.96
+  },
+  "Zambia": {
+    "avg_pesticides": 1670.0,
+    "avg_rainfall": 1020.0,
+    "avg_temperature": 20.9
+  },
+  "Zimbabwe": {
+    "avg_pesticides": 3094.08,
+    "avg_rainfall": 657.0,
+    "avg_temperature": 20.75
+  },
+  "__global__": {
+    "avg_pesticides": 17529.44,
+    "avg_rainfall": 1083.0,
+    "avg_temperature": 21.51
+  }
+}

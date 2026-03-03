@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crop Yield Prediction</title>
+    <meta name="description"
+        content="AI-powered Crop Yield Prediction using live GPS location and OpenWeatherMap data." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ── Reset & tokens ─────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --g1: #22c55e;
+            --g2: #16a34a;
+            --b1: #38bdf8;
+            --r1: #f87171;
+            --dark: #050c18;
+            --card: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e2e8f0;
+            --muted: rgba(255, 255, 255, 0.38);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(ellipse 900px 600px at 20% 0%, rgba(34, 197, 94, 0.11), transparent 65%),
+                radial-gradient(ellipse 600px 500px at 80% 95%, rgba(56, 189, 248, 0.08), transparent 60%),
+                var(--dark);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 2.5rem 1rem 5rem;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        /* ── Phase manager ──────────────────────────────────────── */
+        .phase {
+            display: none;
+        }
+
+        .phase.active {
+            display: block;
+            animation: fadeUp 0.4s ease;
+        }
+
+        /* ── Shared card ────────────────────────────────────────── */
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* ── Top pill ───────────────────────────────────────────── */
+        .topbar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(34, 197, 94, 0.09);
+            border: 1px solid rgba(34, 197, 94, 0.22);
+            border-radius: 999px;
+            padding: 0.28rem 0.9rem;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: var(--g1);
+            letter-spacing: 0.05em;
+        }
+
+        .blink {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--g1);
+            animation: blink 1.6s ease-in-out infinite;
+        }
+
+        /* ── PHASE 1: GPS detecting ─────────────────────────────── */
+        .loc-wrap {
+            text-align: center;
+            padding: 0.5rem 0;
+        }
+
+        .gps-icon {
+            font-size: 4.2rem;
+            display: block;
+            margin-bottom: 1.2rem;
+            animation: gps-pulse 2s ease-in-out infinite;
+        }
+
+        .loc-title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .loc-sub {
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.65;
+        }
+
+        .steps-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stp {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 0.32rem 0.85rem;
+            font-size: 0.78rem;
+            color: var(--muted);
+            background: transparent;
+            transition: all 0.3s;
+        }
+
+        .stp.active {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--g1);
+            font-weight: 600;
+        }
+
+        .stp.done {
+            border-color: rgba(34, 197, 94, 0.18);
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .stp-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+        .stp.active .stp-dot {
+            animation: blink 1s infinite;
+        }
+
+        /* ── GPS denied fallback ────────────────────────────────── */
+        .deny-box {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.4rem;
+            background: rgba(248, 113, 113, 0.07);
+            border: 1px solid rgba(248, 113, 113, 0.22);
+            border-radius: 14px;
+            animation: fadeUp 0.3s ease;
+        }
+
+        .deny-box.show {
+            display: block;
+        }
+
+        .deny-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--r1);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.35rem;
+        }
+
+        .deny-msg {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+        /* ── PHASE 2: Main form ─────────────────────────────────── */
+        .card-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.6rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 35%, var(--g1));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.35rem;
+        }
+
+        h1+p {
+            color: var(--muted);
+            font-size: 0.875rem;
+            line-height: 1.55;
+        }
+
+        /* Weather chips ───────────────────────────────────────────*/
+        .w-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .wc {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .wc.hi {
+            background: rgba(34, 197, 94, 0.09);
+            border-color: rgba(34, 197, 94, 0.22);
+            color: var(--g1);
+            font-weight: 600;
+        }
+
+        .wc .ico {
+            font-size: 1rem;
+        }
+
+        /* Divider ─────────────────────────────────────────────── */
+        .div {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin-bottom: 1.6rem;
+        }
+
+        /* Fields ──────────────────────────────────────────────── */
+        .sec-lbl {
+            font-size: 0.69rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.9rem;
+        }
+
+        .field {
+            margin-bottom: 1.2rem;
+        }
+
+        .field label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.77rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        select,
+        input[type="number"] {
+            width: 100%;
+            padding: 0.78rem 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.97rem;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.6rem;
+        }
+
+        select:focus,
+        input[type="number"]:focus {
+            border-color: var(--g1);
+            background: rgba(34, 197, 94, 0.06);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+        }
+
+        select option {
+            background: #0f172a;
+        }
+
+        input::placeholder {
+            color: var(--muted);
+        }
+
+        /* Soil badge ──────────────────────────────────────────── */
+        .soil-wrap {
+            position: relative;
+        }
+
+        .s-badge {
+            display: none;
+            position: absolute;
+            right: 2.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.71rem;
+            font-weight: 700;
+            padding: 0.18rem 0.55rem;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        .s-badge.pos {
+            background: rgba(34, 197, 94, 0.18);
+            color: var(--g1);
+        }
+
+        .s-badge.neg {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--r1);
+        }
+
+        .s-badge.neu {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--muted);
+        }
+
+        /* Hint ────────────────────────────────────────────────── */
+        .hint {
+            font-size: 0.74rem;
+            color: var(--muted);
+            margin-top: 0.35rem;
+        }
+
+        /* Error banner ─────────────────────────────────────────── */
+        .err {
+            display: none;
+            padding: 0.85rem 1rem;
+            border-radius: 11px;
+            margin-top: 1rem;
+            background: rgba(248, 113, 113, 0.09);
+            border: 1px solid rgba(248, 113, 113, 0.25);
+            font-size: 0.87rem;
+            color: #fca5a5;
+            animation: fadeUp 0.3s ease;
+        }
+
+        .err.show {
+            display: block;
+        }
+
+        /* Predict button ──────────────────────────────────────── */
+        #predictBtn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--g1), var(--g2));
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: transform 0.15s, box-shadow 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #predictBtn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent);
+            pointer-events: none;
+        }
+
+        #predictBtn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 40px rgba(34, 197, 94, 0.45);
+        }
+
+        #predictBtn:active {
+            transform: none;
+        }
+
+        #predictBtn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        /* Spinner ─────────────────────────────────────────────── */
+        .spin {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spinning 0.65s linear infinite;
+            display: none;
+        }
+
+        /* ── Result section ─────────────────────────────────────── */
+        #resultSection {
+            margin-top: 1.6rem;
+            animation: fadeUp 0.45s ease;
+        }
+
+        .res-hero {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 20px;
+            padding: 2rem 1.5rem 1.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .res-lbl {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--g1);
+            margin-bottom: 0.6rem;
+        }
+
+        .res-num {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            animation: pop 0.5s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .res-unit {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.45);
+            margin-left: 0.25rem;
+        }
+
+        .res-crop {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 0.55rem;
+        }
+
+        .bk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+        }
+
+        .bk {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+        }
+
+        .bk-l {
+            font-size: 0.68rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.25rem;
+        }
+
+        .bk-v {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.7rem;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--g1);
+            color: var(--g1);
+        }
+
+        /* ── Footer ─────────────────────────────────────────────── */
+        .footer {
+            text-align: center;
+            margin-top: 1.4rem;
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.18);
+        }
+
+        .footer a {
+            color: rgba(34, 197, 94, 0.6);
+            text-decoration: none;
+        }
+
+        /* ── Keyframes ──────────────────────────────────────────── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+
+            50% {
+                opacity: .35;
+                transform: scale(.65)
+            }
+        }
+
+        @keyframes spinning {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes gps-pulse {
+
+            0%,
+            100% {
+                transform: scale(1) translateY(0)
+            }
+
+            50% {
+                transform: scale(1.07) translateY(-4px)
+            }
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: scale(.8)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <!-- ══════════════════════════════════════════════════════
+       PHASE 1 – GPS Detecting
+  ═══════════════════════════════════════════════════════════ -->
+        <div id="ph-locate" class="phase active">
+            <div class="card">
+                <div class="loc-wrap">
+                    <span class="gps-icon">&#128205;</span>
+                    <div class="loc-title" id="locTitle">Detecting your location...</div>
+                    <p class="loc-sub" id="locSub">
+                        Allow location access when prompted.<br />
+                        Your GPS coordinates are used to fetch live weather data.
+                    </p>
+
+                    <!-- Step pills -->
+                    <div class="steps-row">
+                        <div class="stp active" id="stp1">
+                            <div class="stp-dot"></div>GPS
+                        </div>
+                        <div class="stp" id="stp2">
+                            <div class="stp-dot"></div>Weather
+                        </div>
+                        <div class="stp" id="stp3">
+                            <div class="stp-dot"></div>Ready
+                        </div>
+                    </div>
+
+                    <!-- Denied fallback -->
+                    <div class="deny-box" id="denyBox">
+                        <div class="deny-title">&#9888; Location access denied</div>
+                        <p class="deny-msg" id="denyMsg">
+                            To use this app, please enable location permissions in your browser settings and reload the
+                            page.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                Weather: <a href="https://openweathermap.org" target="_blank">OpenWeatherMap</a> &amp;
+                <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> &middot; No storage of location data
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+       PHASE 2 – Main Form + Result
+  ═══════════════════════════════════════════════════════════ -->
+        <div id="ph-form" class="phase">
+            <div class="topbar">
+                <div class="pill"><span class="blink"></span> Live GPS &bull; Auto Weather</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">&#127807;</span>
+                    <h1>Crop Yield Prediction</h1>
+                    <p>GPS location &amp; climate data fetched automatically. Just pick your crop, soil type, and land
+                        size.</p>
+                </div>
+
+                <!-- Live weather chips -->
+                <div class="w-chips" id="wChips">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="div"></div>
+
+                <form id="predForm" novalidate>
+                    <div class="sec-lbl">Crop Details</div>
+
+                    <div class="field">
+                        <label for="crop">&#127807; Crop / Item</label>
+                        <select id="crop" required>
+                            <option value="" disabled selected>Select a crop...</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="soil">&#127758; Soil Type</label>
+                        <div class="soil-wrap">
+                            <select id="soil" onchange="refreshSoilBadge()">
+                                <option value="loamy">Loamy</option>
+                                <option value="black">Black</option>
+                                <option value="clay">Clay</option>
+                                <option value="red">Red</option>
+                                <option value="sandy">Sandy</option>
+                            </select>
+                            <span class="s-badge pos" id="sBadge">+10%</span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="land">&#128200; Land Size (acres)</label>
+                        <input type="number" id="land" step="0.1" min="0.1" placeholder="e.g. 5" required />
+                        <div class="hint">Automatically converted to hectares &nbsp;(&times;&nbsp;0.4047)</div>
+                    </div>
+
+                    <div class="err" id="errBanner"></div>
+
+                    <button type="submit" id="predictBtn">
+                        <div class="spin" id="btnSpin"></div>
+                        <span id="btnTxt">&#127807; Predict Total Yield</span>
+                    </button>
+                </form>
+
+                <!-- ═══ Result ═══ -->
+                <div id="resultSection" style="display:none">
+                    <div class="res-hero">
+                        <div class="res-lbl">Estimated Total Production</div>
+                        <div>
+                            <span class="res-num" id="rTons">0</span>
+                            <span class="res-unit">Tons</span>
+                        </div>
+                        <div class="res-crop" id="rCrop"></div>
+                    </div>
+
+                    <div class="bk-grid">
+                        <div class="bk">
+                            <div class="bk-l">Yield / Hectare</div>
+                            <div class="bk-v" id="bYield">--</div>
+                        </div>
+                        <div class="bk">
+                            <div class="bk-l">Land (converted)</div>
+                            <div class="bk-v" id="bLand">--</div>
+                        </div>
+                        <div class="bk">
+                            <div class="bk-l">Temperature (model)</div>
+                            <div class="bk-v" id="bTemp">--</div>
+                        </div>
+                        <div class="bk">
+                            <div class="bk-l">Annual Rainfall</div>
+                            <div class="bk-v" id="bRain">--</div>
+                        </div>
+                    </div>
+
+                    <button class="reset-btn" onclick="resetResult()">&#8635; Predict for Another Crop</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                Weather: <a href="https://openweathermap.org" target="_blank">OpenWeatherMap</a> &amp;
+                <a href="https://open-meteo.com" target="_blank">Open-Meteo</a> &middot;
+                ML: Random Forest &middot; R&sup2; = 0.9876
+            </div>
+        </div>
+
+    </div><!-- /wrapper -->
+    <script>
+        /* ═══════════════════════════════════════════════
+           Constants
+        ═══════════════════════════════════════════════ */
+        const SOIL_CFG = {
+            loamy: { lbl: '+10%', cls: 'pos' },
+            black: { lbl: '+15%', cls: 'pos' },
+            clay: { lbl: '−5%', cls: 'neu' },
+            red: { lbl: '−10%', cls: 'neg' },
+            sandy: { lbl: '−20%', cls: 'neg' },
+        };
+
+        let _lat = null, _lon = null, _weather = null;
+
+        /* ═══════════════════════════════════════════════
+           Phase helpers
+        ═══════════════════════════════════════════════ */
+        function showPhase(id) {
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById('ph-' + id).classList.add('active');
+        }
+
+        function setStep(n) {
+            ['stp1', 'stp2', 'stp3'].forEach((id, i) => {
+                const el = document.getElementById(id);
+                el.classList.remove('active', 'done');
+                if (i + 1 < n) el.classList.add('done');
+                if (i + 1 === n) el.classList.add('active');
+            });
+        }
+
+        /* ═══════════════════════════════════════════════
+           GPS detection chain
+        ═══════════════════════════════════════════════ */
+        function startGPS() {
+            setStep(1);
+
+            if (!navigator.geolocation) {
+                showDenied('Your browser does not support geolocation.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(onGPSSuccess, onGPSError, {
+                timeout: 12000,
+                enableHighAccuracy: false,
+                maximumAge: 30000,
+            });
+        }
+
+        async function onGPSSuccess(pos) {
+            _lat = pos.coords.latitude;
+            _lon = pos.coords.longitude;
+
+            setStep(2);
+            document.getElementById('locSub').textContent = 'Fetching live weather from your coordinates...';
+
+            try {
+                const r = await fetch(`/get-weather?lat=${_lat}&lon=${_lon}`);
+                const wx = await r.json();
+
+                if (wx.status !== 'success') throw new Error(wx.message || 'Weather fetch failed.');
+
+                setStep(3);
+                _weather = wx;
+                buildWeatherChips(wx);
+                showPhase('form');
+
+            } catch (err) {
+                showDenied('Weather fetch failed: ' + err.message);
+            }
+        }
+
+        function onGPSError(e) {
+            const msgs = {
+                1: 'Location permission was denied. Enable it in browser settings and reload.',
+                2: 'Your position is currently unavailable. Try again.',
+                3: 'Location request timed out. Please try again.',
+            };
+            showDenied(msgs[e.code] || 'Could not get your location. Please try again.');
+        }
+
+        function showDenied(msg) {
+            document.getElementById('locTitle').textContent = 'Location Unavailable';
+            const box = document.getElementById('denyBox');
+            document.getElementById('denyMsg').textContent = msg;
+            box.classList.add('show');
+            setStep(0);
+        }
+
+        /* ═══════════════════════════════════════════════
+           Weather chips  (shown above form)
+        ═══════════════════════════════════════════════ */
+        function buildWeatherChips(wx) {
+            const bar = document.getElementById('wChips');
+
+            const tempLabel = wx.temperature != null ? `${wx.temperature} °C` : '--';
+            const humLabel = wx.humidity != null ? `${wx.humidity} % humidity` : null;
+            const rainLabel = `${(wx.annual_rain || 0).toLocaleString()} mm/yr`;
+            const yearLabel = wx.data_year ? `${wx.data_year} climate data` : '';
+            const srcLabel = wx.source || '';
+
+            let html = `
+    <div class="wc hi"><span class="ico">&#127782;</span>${tempLabel}</div>
+    <div class="wc"><span class="ico">&#127783;</span>${rainLabel}</div>`;
+
+            if (humLabel)
+                html += `<div class="wc"><span class="ico">&#128167;</span>${humLabel}</div>`;
+
+            if (yearLabel)
+                html += `<div class="wc"><span class="ico">&#128197;</span>${yearLabel}</div>`;
+
+            bar.innerHTML = html;
+        }
+
+        /* ═══════════════════════════════════════════════
+           Crop dropdown
+        ═══════════════════════════════════════════════ */
+        async function loadCrops() {
+            try {
+                const d = await fetch('/crops').then(r => r.json());
+                const sel = document.getElementById('crop');
+                const list = (d.crops && d.crops.length) ? d.crops
+                    : ['Cassava', 'Maize', 'Potatoes', 'Rice, paddy', 'Soybeans', 'Sorghum', 'Wheat', 'Yams'];
+                list.forEach(c => { const o = document.createElement('option'); o.value = o.textContent = c; sel.appendChild(o); });
+            } catch (_) { }
+        }
+
+        /* ═══════════════════════════════════════════════
+           Soil badge
+        ═══════════════════════════════════════════════ */
+        function refreshSoilBadge() {
+            const v = document.getElementById('soil').value;
+            const b = document.getElementById('sBadge');
+            const m = SOIL_CFG[v];
+            if (m) { b.textContent = m.lbl; b.className = 's-badge ' + m.cls; b.style.display = 'inline-block'; }
+        }
+
+        /* ═══════════════════════════════════════════════
+           Form submit
+        ═══════════════════════════════════════════════ */
+        document.getElementById('predForm').addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const crop = document.getElementById('crop').value;
+            const soilType = document.getElementById('soil').value;
+            const landAcres = parseFloat(document.getElementById('land').value);
+            const errBanner = document.getElementById('errBanner');
+
+            errBanner.classList.remove('show');
+            document.getElementById('resultSection').style.display = 'none';
+
+            if (!crop) return showErr('Please select a crop.');
+            if (!landAcres || landAcres <= 0) return showErr('Enter a valid land size in acres.');
+            if (!_lat || !_lon) return showErr('GPS location not available. Please reload.');
+
+            setBtnLoading(true);
+
+            try {
+                const res = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lat: _lat, lon: _lon,
+                        Crop: crop, Soil_Type: soilType,
+                        Land_acres: landAcres,
+                    }),
+                });
+                const data = await res.json();
+                if (data.status !== 'success') throw new Error(data.message);
+                displayResult(data, crop, soilType, landAcres);
+            } catch (err) {
+                showErr('Prediction error: ' + err.message);
+            } finally {
+                setBtnLoading(false);
+            }
+        });
+
+        /* ═══════════════════════════════════════════════
+           Result display
+        ═══════════════════════════════════════════════ */
+        function displayResult(d, crop, soil, acres) {
+            document.getElementById('rTons').textContent = d.total_production_tonnes.toLocaleString(undefined, { maximumFractionDigits: 2 });
+            document.getElementById('rCrop').textContent = `${acres} acres of ${crop} · ${soil.charAt(0).toUpperCase() + soil.slice(1)} soil`;
+            document.getElementById('bYield').textContent = `${d.yield_per_ha_tonnes} t/ha`;
+            document.getElementById('bLand').textContent = `${d.land_ha} ha (${acres} acres)`;
+
+            const wx = d.weather_used || {};
+            document.getElementById('bTemp').textContent = wx.temperature != null ? `${wx.temperature} °C` : '--';
+            document.getElementById('bRain').textContent = wx.rainfall != null ? `${(wx.rainfall).toLocaleString()} mm` : '--';
+
+            const rs = document.getElementById('resultSection');
+            rs.style.display = 'block';
+            rs.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function resetResult() {
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('errBanner').classList.remove('show');
+            document.getElementById('land').value = '';
+        }
+
+        /* ═══════════════════════════════════════════════
+           UI helpers
+        ═══════════════════════════════════════════════ */
+        function showErr(msg) {
+            const b = document.getElementById('errBanner');
+            b.textContent = '⚠ ' + msg;
+            b.classList.add('show');
+        }
+
+        function setBtnLoading(on) {
+            document.getElementById('btnSpin').style.display = on ? 'block' : 'none';
+            document.getElementById('btnTxt').style.display = on ? 'none' : 'block';
+            document.getElementById('predictBtn').disabled = on;
+        }
+
+        /* ═══════════════════════════════════════════════
+           Init
+        ═══════════════════════════════════════════════ */
+        (async function init() {
+            await loadCrops();
+            refreshSoilBadge();
+            startGPS();
+        })();
+    </script>
+</body>
+
+</html>
