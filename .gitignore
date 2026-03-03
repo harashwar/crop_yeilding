@@ -1,0 +1,19 @@
+# Large model files (too big for GitHub - 120MB+)
+crop_yield_model.pkl
+*.pkl
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment
+.env
+*.env
+
+# Temp/output files
+app_output.txt
+
+# OS
+.DS_Store
+Thumbs.db
